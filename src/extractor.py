@@ -13,18 +13,6 @@ def preprocess_image_pil(image_path):
     return enhanced
 
 def extract_text_from_image(image_path):
-    """
-    Preprocess the image and extract text using Tesseract.
-    
-    Parameters:
-        image_path (str): The full path to the image file.
-    
-    Returns:
-        str: The text extracted from the image.
-    
-    Raises:
-        RuntimeError: If there is an error during processing.
-    """
     try:
         processed_image = preprocess_image_pil(image_path)
         text = pytesseract.image_to_string(processed_image, lang='eng', config='--psm 6')

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoices</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Invoices</h1>
+        {% if invoices %}
+            <ul class="invoice-list">
+            {% for invoice in invoices %}
+                <li class="invoice-item">
+                    <div class="invoice-header">
+                        <h2>Invoice: {{ invoice.imageName }}</h2>
+                        <p class="timestamp">Timestamp: {{ invoice.timestamp }}</p>
+                    </div>
+                    <div class="invoice-content">
+                        <div class="invoice-result">
+                            <p>Result:</p>
+                            <pre>{{ invoice.result | tojson(indent=2) }}</pre>
+                        </div>
+                        <div class="invoice-image">
+                            <img src="{{ url_for('static', filename='images/' ~ invoice.imageName) }}" alt="Invoice Image">
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No invoices found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

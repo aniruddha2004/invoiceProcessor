@@ -1,30 +1,35 @@
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_ollama.llms import OllamaLLM
-from langchain_core.runnables import RunnableLambda, RunnableSequence
+from langchain_groq import ChatGroq
+from langchain_core.runnables import RunnableLambda
 from extractor import extract_text_from_image
+from dotenv import load_dotenv
 
-model = OllamaLLM(model="llama3.1:latest")
+load_dotenv()
 
-sysTemplate = "You will be given the data that has been extracted from the image of an invoice. The data is in full unstructured format, you need to parse the data and give a json object that contains each and every element extracted from the invoice."
+def process_image(path) :
+    model = ChatGroq(temperature=0, model_name="llama-3.3-70b-versatile")
 
-promptTemplate = ChatPromptTemplate.from_messages([
-    ("system", sysTemplate),
+    sysTemplate = "You will be given the data that has been extracted from the image of an invoice. The data is in full unstructured format, you need to parse the data and give a json object that contains each and every element extracted from the invoice. The response should only contain the json object, not even a single extra text should be present."
+
+    promptTemplate = ChatPromptTemplate.from_messages([
+        ("system", sysTemplate),
     ("human", "Here is the extracted text : '{text}'")
-])
+    ])
 
-def getText(x) :
-    text = extract_text_from_image(x)
-    return { "text" : text}
+    def getText(x) :
+        text = extract_text_from_image(x)
+        return { "text" : text}
 
 
-extractText = RunnableLambda(getText)
-getPrompt = RunnableLambda(lambda x : promptTemplate.invoke(x))
-callModel = RunnableLambda(lambda x : model.invoke(x))
-# getResult = RunnableLambda(lambda x : x.content)
+    extractText = RunnableLambda(getText)
+    getPrompt = RunnableLambda(lambda x : promptTemplate.invoke(x))
+    callModel = RunnableLambda(lambda x : model.invoke(x))
+    getResult = RunnableLambda(lambda x : x.content)
 
-# chain = RunnableSequence(first = runnable1, middle = [runnable2, runnable3], last = runnable4)
-chain = extractText | getPrompt | callModel
+    chain = extractText | getPrompt | callModel | getResult
 
-result = chain.invoke("C:/xampp/htdocs/invoiceParser/invoice.jpg")
+    result = chain.invoke(path)
 
-print(result)
+    return result
+
+# print(process_image("C:/xampp/htdocs/parser-invoice/src/invoice2.jpg"))
