@@ -10,7 +10,6 @@ This project includes a Python application that parses the contents of a invoice
 2. [Setup Instructions](#setup-instructions)
 3. [Environment Variables](#environment-variables)
 4. [Running the Application](#running-the-application)
-5. [License](#license)
 
 ---
 
