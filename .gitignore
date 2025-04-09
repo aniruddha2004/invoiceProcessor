@@ -1,6 +1,6 @@
 # Exclude virtual environment
 .venv/
-
+.env
 uploads/
 
 
