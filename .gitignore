@@ -1,6 +1,8 @@
 # Exclude virtual environment
 .venv/
 
+uploads/
+
 
 # Exclude Python bytecode
 __pycache__/

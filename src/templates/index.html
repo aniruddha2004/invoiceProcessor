@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Invoice Parser Demo</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>Invoice Parser Demo</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style-index.css') }}">
 </head>
 <body>
+  <div class="container">
     <h1>Upload an Invoice Image</h1>
+    <!-- Form: file upload on the left, reference CSV textarea on the right -->
     <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" name="file" id="fileInput" accept="image/*" required>
+      <div class="upload-row">
+        <!-- File upload container -->
+        <div id="fileUploadContainer">
+          <label for="fileInput">Select Invoice Image:</label>
+          <input type="file" name="file" id="fileInput" accept="image/*" required>
+        </div>
+        <!-- Reference CSV container -->
+        <div id="refCsvContainer">
+          <label for="refCsvInput">Reference CSV:</label>
+          <textarea id="refCsvInput" name="refCsv" placeholder="Enter reference CSV here"></textarea>
+        </div>
+      </div>
+      <!-- Full-width Process button -->
+      <div id="buttonContainer">
         <button type="submit">Process</button>
+      </div>
     </form>
+
     <h2>Parsed Invoice Data:</h2>
-    <pre id="result"></pre>
+    <div class="csv-table-wrapper">
+      <div id="result"></div>
+    </div>
+  </div>
 
-    <script>
-        const form = document.getElementById('uploadForm');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const fileInput = document.getElementById('fileInput');
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-
-            const response = await fetch('/upload', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            document.getElementById('result').textContent = JSON.stringify(data.result, null, 2);
-        });
-    </script>
+  <!-- Load the JavaScript file from static/js/main.js -->
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

@@ -42,6 +42,8 @@ def upload_file():
         # Process the uploaded image using your chain
         result = process_image(filepath)
         
+        print(result)
+        
         # Remove markdown code block formatting if present
         if result.startswith("```") and result.endswith("```"):
             result = result[3:-3].strip()

@@ -18,7 +18,33 @@
                     <div class="invoice-content">
                         <div class="invoice-result">
                             <p>Result:</p>
-                            <pre>{{ invoice.result | tojson(indent=2) }}</pre>
+                            {# Split the CSV data by newlines #}
+                            {% set rows = invoice.result.split('\n') %}
+                            <table class="csv-table">
+                                {# Loop over each row, skipping any empty lines #}
+                                {% for row in rows if row.strip() %}
+                                    {% set cols = row.split(',') %}
+                                    {% if loop.first %}
+                                        <thead>
+                                            <tr>
+                                                {# Render header cells by stripping extra quotes #}
+                                                {% for col in cols %}
+                                                    <th>{{ col.strip('"') }}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                    {% else %}
+                                        <tr>
+                                            {# Render each CSV column in a table cell #}
+                                            {% for col in cols %}
+                                                <td>{{ col.strip('"') }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                        </tbody>
+                            </table>
                         </div>
                         <div class="invoice-image">
                             <img src="{{ url_for('static', filename='images/' ~ invoice.imageName) }}" alt="Invoice Image">

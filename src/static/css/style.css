@@ -137,3 +137,53 @@ pre {
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+/* Table container (optional, if you want a wrapper) */
+.csv-table-wrapper {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    overflow-x: auto; /* Horizontal scroll for narrower screens */
+  }
+  
+  /* The main table styling */
+  .csv-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto; /* Centers the table */
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+  }
+  
+  /* The table header styling */
+  .csv-table thead {
+    background-color: #f2f2f2;
+  }
+  
+  .csv-table thead th {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  /* Table cells in body */
+  .csv-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Zebra-striping for rows */
+  .csv-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  /* Hover effect for rows */
+  .csv-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Optional: styling for grand total row if it’s the last row */
+  .csv-table tfoot td {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }

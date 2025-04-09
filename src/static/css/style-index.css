@@ -1,0 +1,290 @@
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #007bff;
+  }
+
+  /* ---------- Form Layout ---------- */
+  /* A row for file upload and reference CSV side by side */
+  .upload-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch; /* ensures both columns stretch to the same height */
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* Common container style so both match in height */
+  #fileUploadContainer,
+  #refCsvContainer {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    flex: 1;
+    min-height: 220px; /* adjust as desired */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* File upload container (on the left) */
+  #fileUploadContainer label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  #fileUploadContainer input[type="file"] {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  /* Reference CSV container (on the right) */
+  #refCsvContainer label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  #refCsvContainer textarea {
+    flex: 1; /* fills all remaining vertical space in this container */
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Full-width button container below the row */
+  #buttonContainer {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  #buttonContainer button {
+    width: 100%;
+    max-width: 640px;
+    display: block;
+    margin: 0 auto;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  #buttonContainer button:hover {
+    background-color: #0056b3;
+  }
+
+  h2 {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  pre {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 14px;
+  }
+
+  /* ---------- Invoice & Table Styles (Unchanged) ---------- */
+
+  /* Invoice list styling */
+  .invoice-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .invoice-item {
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+  }
+
+  .invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .invoice-header h2 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #007bff;
+  }
+
+  .timestamp {
+    font-size: 0.9em;
+    color: #666;
+  }
+
+  .invoice-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-top: 15px;
+  }
+
+  .invoice-result {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .invoice-result pre {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 14px;
+  }
+
+  .invoice-image {
+    flex-shrink: 0;
+    width: 300px;
+    text-align: center;
+  }
+
+  .invoice-image img {
+    max-width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Table container */
+  .csv-table-wrapper {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    overflow-x: auto;
+  }
+
+  /* Main table styling */
+  .csv-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .csv-table thead {
+    background-color: #f2f2f2;
+  }
+
+  .csv-table thead th {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .csv-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+  }
+
+  .csv-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+
+  .csv-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .csv-table tfoot td {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+
+  /* Style the overall input area */
+  input[type="file"] {
+    background-color: #fff; /* Change if you want a subtle background */
+    border: 2px solid #007bff; /* Thicker border with a primary color */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    padding: 8px;
+    transition: background-color 0.3s, border-color 0.3s;
+    outline: none;
+  }
+
+  /* Hover effect for the entire input box */
+  input[type="file"]:hover {
+    background-color: #eef6ff; /* Lightly tint the background on hover */
+  }
+
+  /* Customize the "Choose File" / "Browse" button in WebKit-based browsers (Chrome, Safari, etc.) */
+  input[type="file"]::-webkit-file-upload-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+  }
+
+  /* Hover effect for the custom button in WebKit browsers */
+  input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #0056b3;
+  }
+
+  /* For Firefox (Gecko engine), you can similarly style the file-upload button: */
+  input[type="file"]::-moz-file-upload-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+  }
+
+  /* Hover effect for Firefox */
+  input[type="file"]::-moz-file-upload-button:hover {
+    background-color: #0056b3;
+  }
+
+  
