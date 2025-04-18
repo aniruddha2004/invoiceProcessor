@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Invoice Parser{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#f0f2f8',  // Professional background
+                        primary: {
+                            50: '#f5f7ff',
+                            100: '#ecf0ff',
+                            200: '#d9e1ff',
+                            300: '#b3c2ff',
+                            400: '#8093ff',
+                            500: '#4c64ff',  // Main brand color
+                            600: '#3b4fd9',
+                            700: '#2a3bb3',
+                            800: '#1c288c',
+                            900: '#0e1466'
+                        },
+                        secondary: {
+                            50: '#f4f7fb',
+                            100: '#e9eff7',
+                            200: '#d3dfef',
+                            300: '#b1c7e3',
+                            400: '#8fadd7',
+                            500: '#6d93cb',
+                            600: '#4c79bf',
+                            700: '#3a5fa3',
+                            800: '#2c4a87',
+                            900: '#1e356b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-background min-h-screen">
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">Invoice Parser</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="/" class="{% if request.path == '/' %}border-primary-500 text-primary-600{% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif %} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200">
+                            Upload
+                        </a>
+                        <a href="/invoices" class="{% if request.path == '/invoices' %}border-primary-500 text-primary-600{% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif %} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200">
+                            Invoices
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

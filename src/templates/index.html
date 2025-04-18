@@ -1,39 +1,163 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Invoice Parser Demo</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style-index.css') }}">
-</head>
-<body>
-  <div class="container">
-    <h1>Upload an Invoice Image</h1>
-    <!-- Form: file upload on the left, reference CSV textarea on the right -->
-    <form id="uploadForm" enctype="multipart/form-data">
-      <div class="upload-row">
-        <!-- File upload container -->
-        <div id="fileUploadContainer">
-          <label for="fileInput">Select Invoice Image:</label>
-          <input type="file" name="file" id="fileInput" accept="image/*" required>
-        </div>
-        <!-- Reference CSV container -->
-        <div id="refCsvContainer">
-          <label for="refCsvInput">Reference CSV:</label>
-          <textarea id="refCsvInput" name="refCsv" placeholder="Enter reference CSV here"></textarea>
-        </div>
-      </div>
-      <!-- Full-width Process button -->
-      <div id="buttonContainer">
-        <button type="submit">Process</button>
-      </div>
-    </form>
+{% extends "base.html" %}
 
-    <h2>Parsed Invoice Data:</h2>
-    <div class="csv-table-wrapper">
-      <div id="result"></div>
+{% block title %}Upload Invoice - Invoice Parser{% endblock %}
+
+{% block content %}
+<!-- Main Content Area -->
+<div class="space-y-8">
+    <!-- Top Section with Upload and Recent Activity -->
+    <div class="flex gap-8">
+        <!-- Upload Section (75%) -->
+        <div class="flex-grow w-3/4 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="border-b border-gray-100 bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4">
+                <h1 class="text-xl font-semibold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    Upload Invoice
+                </h1>
+            </div>
+            
+            <form id="uploadForm" enctype="multipart/form-data" class="p-6">
+                <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                    <!-- File Upload Section -->
+                    <div class="space-y-4">
+                        <label class="block text-sm font-medium text-gray-700">Invoice Image</label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-200 border-dashed rounded-xl bg-primary-50 transition-all duration-200 hover:bg-primary-100">
+                            <div class="space-y-2 text-center" id="uploadArea">
+                                <!-- Default State -->
+                                <div id="defaultUploadState" class="space-y-2">
+                                    <svg class="mx-auto h-12 w-12 text-primary-500" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4-4m4-4h.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <div class="flex text-sm text-gray-600">
+                                        <label for="fileInput" class="relative cursor-pointer rounded-md font-medium text-primary-600 hover:text-primary-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500">
+                                            <span>Upload a file</span>
+                                            <input id="fileInput" name="file" type="file" class="sr-only" accept="image/*" required>
+                                        </label>
+                                        <p class="pl-1">or drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                </div>
+
+                                <!-- Selected File State -->
+                                <div id="selectedFileState" class="hidden space-y-2">
+                                    <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <div class="text-sm text-gray-600">
+                                        <p class="font-medium text-primary-600" id="selectedFileName">No file selected</p>
+                                        <button type="button" id="changeFileBtn" class="mt-2 text-primary-500 hover:text-primary-600">
+                                            Change file
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ERP System Data Section -->
+                    <div class="space-y-4">
+                        <label for="refCsvInput" class="block text-sm font-medium text-gray-700">ERP System Data</label>
+                        <div class="relative rounded-xl shadow-sm">
+                            <textarea
+                                id="refCsvInput"
+                                name="refCsv"
+                                rows="8"
+                                class="block w-full rounded-xl border-2 border-gray-200 bg-primary-50 focus:border-primary-500 focus:ring-primary-500 sm:text-sm transition-colors duration-200 p-4"
+                                placeholder="Enter ERP system data here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button
+                        type="submit"
+                        class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        Process Invoice
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Recent Activity (25%) -->
+        <div class="w-1/4 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="border-b border-gray-100 bg-gradient-to-r from-secondary-600 to-secondary-700 px-6 py-4">
+                <h2 class="text-xl font-semibold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Recent Activity
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    {% if recent_invoices %}
+                        {% for invoice in recent_invoices %}
+                        <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                            <div class="flex-shrink-0">
+                                <div class="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900">{{ invoice.name }}</p>
+                                <p class="text-xs text-gray-500">{{ invoice.timestamp }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-8">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No recent activity</h3>
+                            <p class="mt-1 text-xs text-gray-500">Start by processing your first invoice</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-6">
+                    <a href="/invoices" 
+                       class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-primary-700 bg-primary-50 hover:bg-primary-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                        View All Invoices
+                        <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Load the JavaScript file from static/js/main.js -->
-  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-</body>
-</html>
+    <!-- Results Section (Full Width) -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="border-b border-gray-100 bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-xl font-semibold text-white flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                Parsed Invoice Data
+            </h2>
+        </div>
+        <div id="result" class="p-6">
+            <div class="text-center text-gray-500 py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium">No data yet</h3>
+                <p class="mt-1 text-sm">Upload and process an invoice to see results here</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
