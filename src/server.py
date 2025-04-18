@@ -42,33 +42,15 @@ def upload_file():
         # Process the uploaded image using your chain
         result = process_image(filepath)
         
-        print(result)
-        
-        # Remove markdown code block formatting if present
-        if result.startswith("```") and result.endswith("```"):
-            result = result[3:-3].strip()
-            
-        # Remove any leading language indicator such as "json\n"
-        if result.lower().startswith("json"):
-            # Remove "json" and any subsequent newline characters.
-            result = result[4:].lstrip("\n")
-
-        
-        # Attempt to parse the result as JSON so it's returned as a JSON object
-        try:
-            parsed_result = json.loads(result)
-        except json.JSONDecodeError:
-            parsed_result = result  # fallback in case it's not valid JSON
-        
-        # Store the parsed result in Firestore along with the unique image name and a timestamp
+        # Store the result as a string in Firestore
         doc_data = {
             'imageName': unique_filename,
-            'result': parsed_result,
+            'result': result,  # This is already a string
             'timestamp': datetime.utcnow().isoformat()
         }
         db.collection('invoices').document(unique_filename).set(doc_data)
         
-        return jsonify({'result': parsed_result, 'imageName': unique_filename})
+        return jsonify({'result': result, 'imageName': unique_filename})
     else:
         return jsonify({'error': 'Invalid file type'}), 400
     
@@ -80,7 +62,13 @@ def get_invoices():
     invoices = []
     for doc in docs:
         data = doc.to_dict()
+        # Ensure result is a string
+        if isinstance(data.get('result'), dict):
+            data['result'] = json.dumps(data['result'])
         invoices.append(data)
+    
+    # Sort invoices by timestamp in descending order (most recent first)
+    invoices.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
     
     # Render the invoices.html template and pass the invoices list
     return render_template('invoices.html', invoices=invoices)

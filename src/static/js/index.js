@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     return `
                                         <td class="px-6 py-4 whitespace-nowrap text-sm border-b border-gray-100 ${!matches ? 'text-gray-900' : 'text-gray-600'}" 
                                             style="${!matches ? 'background-color: rgb(254, 202, 202) !important;' : ''}"
-                                            title="${!matches ? `Expected: ${erpValue}\nExtracted: ${col}` : ''}">
+                                            title="${!matches ? `Value in Database: ${erpValue}\nExtracted: ${col}` : ''}">
                                             ${col}
                                         </td>
                                     `;
