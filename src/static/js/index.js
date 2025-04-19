@@ -66,6 +66,38 @@ document.addEventListener("DOMContentLoaded", function() {
         updateFileDisplay(file);
     }
 
+    // Tab handling
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    function switchTab(tabId) {
+        // Update tab buttons
+        tabButtons.forEach(button => {
+            if (button.dataset.tab === tabId) {
+                button.classList.add('border-primary-500', 'text-primary-600');
+                button.classList.remove('border-transparent', 'text-gray-500');
+            } else {
+                button.classList.remove('border-primary-500', 'text-primary-600');
+                button.classList.add('border-transparent', 'text-gray-500');
+            }
+        });
+
+        // Update tab contents
+        tabContents.forEach(content => {
+            if (content.id === tabId) {
+                content.classList.remove('hidden');
+            } else {
+                content.classList.add('hidden');
+            }
+        });
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            switchTab(button.dataset.tab);
+        });
+    });
+
     // Form submission handler
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -174,6 +206,68 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>`;
                 
                 resultDiv.innerHTML = tableHtml;
+
+                // Update ERP data tab
+                const erpDataTable = document.getElementById('erp-data-table');
+                if (erpData.trim()) {
+                    let erpTableHtml = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                    `;
+                    
+                    erpRows.forEach((row, rowIndex) => {
+                        const cols = row.split(',').map(col => col.trim().replace(/"/g, ''));
+                        
+                        if (rowIndex === 0) {
+                            // Header row
+                            erpTableHtml += `
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        ${cols.map(col => `
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                                ${col}
+                                            </th>
+                                        `).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                            `;
+                        } else {
+                            // Data rows
+                            erpTableHtml += `
+                                <tr class="${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100">
+                                    ${cols.map(col => `
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 border-b border-gray-100">
+                                            ${col}
+                                        </td>
+                                    `).join('')}
+                                </tr>
+                            `;
+                        }
+                    });
+                    
+                    erpTableHtml += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    erpDataTable.innerHTML = erpTableHtml;
+                }
+
+                // Update invoice image tab
+                const invoiceImage = document.getElementById('invoice-image');
+                const file = fileInput.files[0];
+                if (file) {
+                    const imageUrl = URL.createObjectURL(file);
+                    invoiceImage.innerHTML = `
+                        <div class="relative h-[600px] bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+                            <img 
+                                src="${imageUrl}"
+                                alt="Uploaded Invoice"
+                                class="absolute inset-0 w-full h-full object-contain">
+                        </div>
+                    `;
+                }
             } else {
                 throw new Error(data.error || 'Failed to process invoice');
             }
