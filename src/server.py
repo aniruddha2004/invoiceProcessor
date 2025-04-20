@@ -74,4 +74,4 @@ def get_invoices():
     return render_template('invoices.html', invoices=invoices)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=34568)
